@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF to Mock Test – Upload</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+<div class="container">
+    <h1>PDF to Mock Test</h1>
+    <p>Upload a PDF that contains multiple-choice questions (MCQs). The system will extract the questions and start an online test.</p>
+
+    <form id="upload-form">
+        <label for="pdf-file">Select PDF file:</label>
+        <input type="file" id="pdf-file" accept=".pdf" required />
+        <button type="submit" id="upload-btn">Upload &amp; Process</button>
+    </form>
+
+    <p id="status-msg"></p>
+    <p id="error-msg"></p>
+</div>
+
+<script>
+    const form = document.getElementById('upload-form');
+    const fileInput = document.getElementById('pdf-file');
+    const uploadBtn = document.getElementById('upload-btn');
+    const statusMsg = document.getElementById('status-msg');
+    const errorMsg  = document.getElementById('error-msg');
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        errorMsg.textContent = '';
+
+        const file = fileInput.files[0];
+        if (!file) {
+            errorMsg.textContent = 'Please select a PDF file.';
+            return;
+        }
+        if (!file.name.toLowerCase().endsWith('.pdf')) {
+            errorMsg.textContent = 'Only PDF files are accepted.';
+            return;
+        }
+
+        uploadBtn.disabled = true;
+        statusMsg.textContent = 'Uploading and processing… please wait.';
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.detail || 'Upload failed.');
+            }
+
+            statusMsg.textContent = `Success! Extracted ${data.count} questions. Redirecting to test…`;
+            setTimeout(() => { window.location.href = data.redirect; }, 1000);
+
+        } catch (err) {
+            statusMsg.textContent = '';
+            errorMsg.textContent = 'Error: ' + err.message;
+            uploadBtn.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>

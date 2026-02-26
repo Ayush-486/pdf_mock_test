@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF to Mock Test – Test</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <style>
+        .diagram-notice {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #856404;
+            margin-bottom: 0.75rem;
+        }
+
+        #s-question-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+            max-height: 40vh;
+            overflow-y: auto;
+            font-size: 0.9rem;
+        }
+
+        #s-question-list li {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Fixed timer bar at top -->
+    <div id="timer-bar">Time Remaining: <span id="timer-display">30:00</span></div>
+
+    <div id="test-wrapper">
+        <!-- Shown while loading questions -->
+        <div id="loading-msg">Loading questions…</div>
+
+        <!-- Main test UI (hidden until questions load) -->
+        <div id="test-ui" style="display:none;">
+            <p id="question-counter"></p>
+            <p id="question-text"></p>
+            <!-- diagram-notice injected here by JS -->
+
+            <ul class="options-list" id="options-list"></ul>
+
+            <div id="nav-buttons">
+                <button id="prev-btn" onclick="navigate(-1)">&#8592; Previous</button>
+                <button id="next-btn" onclick="navigate(1)">Next &#8594;</button>
+                <button id="submit-btn" onclick="submitTest()">Submit Test</button>
+            </div>
+        </div>
+
+        <!-- Summary shown after submit (hidden initially) -->
+        <div id="summary-section" style="display:none;">
+            <h1>Test Submitted</h1>
+            <div id="summary-box">
+                <p><strong>Total Questions:</strong> <span id="s-total"></span></p>
+                <p><strong>Attempted:</strong> <span id="s-attempted"></span></p>
+                <p><strong>Unanswered:</strong> <span id="s-unanswered"></span></p>
+            </div>
+            <h3>Question-wise Summary</h3>
+            <ul id="s-question-list"></ul>
+            <p style="margin-top:1rem;"><a href="/">&#8592; Upload another PDF</a></p>
+        </div>
+    </div>
+
+    <script src="/static/test.js"></script>
+</body>
+
+</html>
