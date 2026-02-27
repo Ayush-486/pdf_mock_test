@@ -6,6 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PDF to Mock Test – Test</title>
     <link rel="stylesheet" href="/static/style.css" />
+    <!-- MathJax v3 – renders LaTeX-style math in question and option text -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)'], ['$', '$']],
+                displayMath: [['\\[', '\\]'], ['$$', '$$']],
+                processEscapes: true,
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                processHtmlClass: 'math-text',
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         .diagram-notice {
             background: #fff3cd;
@@ -30,6 +45,40 @@
             padding: 0.25rem 0;
             border-bottom: 1px solid #eee;
         }
+
+        /* ── Question image ── */
+        #question-image-wrap {
+            margin: 0.75rem 0 1rem;
+            text-align: center;
+            display: none;
+            /* hidden by default; JS shows when image_path set */
+        }
+
+        #question-image {
+            max-width: 100%;
+            max-height: 320px;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            object-fit: contain;
+        }
+
+        .question-img-caption {
+            font-size: 0.78rem;
+            color: #888;
+            margin-top: 0.35rem;
+        }
+
+        /* ── Option diagram images (one per option for image-only options) ── */
+        .option-diagram {
+            display: block;
+            max-width: 280px;
+            max-height: 200px;
+            margin: 0.4rem 0 0.2rem 1.5rem;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            object-fit: contain;
+        }
     </style>
 </head>
 
@@ -46,7 +95,14 @@
         <div id="test-ui" style="display:none;">
             <p id="question-counter"></p>
             <p id="question-text"></p>
-            <!-- diagram-notice injected here by JS -->
+
+            <!-- Embedded diagram image (shown only when image_path is set) -->
+            <div id="question-image-wrap">
+                <img id="question-image" class="question-diagram" src="" alt="Question diagram" />
+                <p class="question-img-caption">📷 Diagram extracted from PDF</p>
+            </div>
+
+            <!-- diagram-notice injected here by JS when image unavailable but flag set -->
 
             <ul class="options-list" id="options-list"></ul>
 
